@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, UserCredential } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential,deleteUser } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { UserController } from './usersController';
+import { IUser } from '../models/User';
 
 export class FirebaseAuthController {
   async registerUser(req: Request, res: Response) {
@@ -10,6 +12,15 @@ export class FirebaseAuthController {
     }
     try {
       const userCreds = await createUserWithEmailAndPassword(auth, email, password);
+      const userData:IUser = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        nickName: req.body.nickName,
+        email: req.body.email,
+        avatarUrl: req.body.avatarUrl,
+        firebaseUID: userCreds.user.uid,
+      }
+      await new UserController().createUser(userData);
       res.status(200).json({ message: "User registered successfully", userCreds })
     } catch (err) {
       console.log('err:', err);
