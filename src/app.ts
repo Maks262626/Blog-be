@@ -9,6 +9,7 @@ import { cloudinaryConfig } from './config/cloudinary';
 import fileRouter from './routes/file.router';
 import articleRouter from './routes/article.route';
 import commentRoute from './routes/comment.route';
+import tagRoute from './routes/tag.route';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/upload', fileRouter);
 app.use('/api/articles', articleRouter);
 app.use('/api/comments', commentRoute);
+app.use('/api/tags',tagRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => { console.log(`Server is running on port ${PORT}`); });
