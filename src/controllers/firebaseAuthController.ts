@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential,deleteUser } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential, deleteUser } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { UserController } from './usersController';
 import { IUser } from '../models/User';
@@ -12,7 +12,7 @@ export class FirebaseAuthController {
     }
     try {
       const userCreds = await createUserWithEmailAndPassword(auth, email, password);
-      const userData:IUser = {
+      const userData: IUser = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         nickName: req.body.nickName,

@@ -8,6 +8,7 @@ import cors from 'cors';
 import { cloudinaryConfig } from './config/cloudinary';
 import fileRouter from './routes/file.router';
 import articleRouter from './routes/article.route';
+import commentRoute from './routes/comment.route';
 
 dotenv.config();
 
@@ -24,7 +25,8 @@ cloudinaryConfig();
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/upload', fileRouter);
-app.use('/api/article', articleRouter);
+app.use('/api/articles', articleRouter);
+app.use('/api/comments', commentRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => { console.log(`Server is running on port ${PORT}`); });
