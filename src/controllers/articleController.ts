@@ -30,7 +30,32 @@ export class ArticleController {
   }
   async getAllArticles(req: Request, res: Response): Promise<IArticle[] | undefined> {
     try {
-      const articles = await Article.find().populate(['author']);
+      // ?sort=[date|views|likes|comments]
+
+      enum SortType {
+        Date = "date",
+        Views = "views",
+        Likes = "likes",
+        Comments = "comments"
+      }
+      type SortOption = { [key: string]: 1 | -1 };
+      const sortTypeQuery = req.query.sort as SortType;
+      const sortOrderQuery = req.query.order as string;
+      const sortOrder = sortOrderQuery === 'desc' ? -1 : 1;
+
+      const sortFields: { [key in SortType]: string } = {
+        [SortType.Date]: 'createdAt',
+        [SortType.Views]: 'viewsCount',
+        [SortType.Likes]: 'likes',
+        [SortType.Comments]: 'commentsCount'
+      }
+      let sortField: string = sortFields[sortTypeQuery];
+      if (!sortField) {
+        sortField = sortFields['date'];
+      }
+
+      const sortOption: SortOption = { [sortField]: sortOrder };
+      const articles = await Article.find().populate(['author', 'tags']).sort(sortOption);
       const formatedArticles = await Promise.all(articles.map(async (article) => {
         const comments = await Comment.aggregate([
           {
@@ -64,7 +89,7 @@ export class ArticleController {
   async getArticlebyId(req: Request, res: Response): Promise<IArticle | undefined | null> {
     const articleId = req.params.id;
     try {
-      const article = await Article.findById(articleId).populate(['author']);
+      const article = await Article.findById(articleId).populate(['author', 'tags']);
       if (!article) {
         res.status(404).json({ message: "Article not found" });
         return;
