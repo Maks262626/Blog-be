@@ -30,6 +30,10 @@ app.use('/api/articles', articleRouter);
 app.use('/api/comments', commentRoute);
 app.use('/api/tags',tagRoute);
 
+app.get('/api/test',(_,res)=> {
+  res.json({success:true})
+})
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => { console.log(`Server is running on port ${PORT}`); });
 
