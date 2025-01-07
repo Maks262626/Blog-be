@@ -38,7 +38,7 @@ export class FirebaseAuthController {
       if (!idToken) {
         return res.status(400).json({ message: "Failed to login" });
       }
-      res.cookie('access_token', idToken, { httpOnly: true });
+      res.cookie('access_token', idToken, { httpOnly: true,secure:true,sameSite:'none' });
       res.status(200).json({ message: "User logged in successfully", userCreds })
     } catch (err) {
       console.log('err:', err);
