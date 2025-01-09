@@ -21,6 +21,11 @@ export class FirebaseAuthController {
         firebaseUID: userCreds.user.uid,
       }
       await new UserController().createUser(userData);
+      const idToken = await userCreds.user.getIdToken();
+      if (!idToken) {
+        return res.status(400).json({ message: "Failed to login" });
+      }
+      res.cookie('access_token', idToken, { httpOnly: true,secure:true,sameSite:'none' });
       res.status(200).json({ message: "User registered successfully", userCreds })
     } catch (err) {
       console.log('err:', err);
