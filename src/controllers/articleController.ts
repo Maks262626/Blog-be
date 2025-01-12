@@ -96,7 +96,7 @@ export class ArticleController {
       }
       const comments = await Comment.aggregate([
         {
-          $match: { parentId: { $exists: false }, article: new mongoose.Schema.Types.ObjectId(articleId) }
+          $match: { parentId: { $exists: false }, article: new mongoose.Types.ObjectId(articleId) }
         },
         {
           $lookup: {
@@ -110,6 +110,8 @@ export class ArticleController {
           $sort: { createdAt: -1 }
         }
       ])
+      console.log(article);
+      
       res.json({ ...article.toObject(), comments });
       return article;
     } catch (err) {
